@@ -91,11 +91,13 @@ public class MainPane extends BorderPane{
         play.setOnMouseClicked(e -> {
            if(play.getImage().equals(pause)){
                cp.pause();
-               play.setImage(replay);  
+               play.setImage(replay);
+               pc.setPause(true);
            }else if(play.getImage().equals(replay)){
                try {
                    cp.play(); 
                    play.setImage(pause);
+                   pc.setPause(false);
                } catch (Exception ex) {
                    Logger.getLogger(MainPane.class.getName()).log(Level.SEVERE, null, ex);
                }
@@ -103,7 +105,7 @@ public class MainPane extends BorderPane{
                cp.setDevice(devices.getValue()); 
                 try {
                     cp.play();
-                    pc.initCtl();
+                    pc.run();
                     play.setImage(pause);
                     stop.setDisable(false); 
                 } catch (Exception ex) {
@@ -115,15 +117,13 @@ public class MainPane extends BorderPane{
         stop.setOnMouseClicked(e-> {
             cp.stop();
             play.setImage(pImg); 
-            stop.setDisable(true); 
+            stop.setDisable(true);
+            pc.stop();
         }); 
     }
 
     private void lefPanel(){
-        ProtocolChart pc = new ProtocolChart();
-        pc.initCtl();
-        pc.setAlignment(Pos.CENTER);
-        TitledPane pane = new TitledPane();
+        TitledPane pane = new TitledPane("t1", pc);
         this.setLeft(pane);
         pane.setMinHeight(Const.HEIGHT - top);
         pane.setMinWidth(Const.W50);
@@ -132,10 +132,9 @@ public class MainPane extends BorderPane{
 
     private void rightPanel(){
         VBox vBox = new VBox();
-
         vBox.setMinHeight(Const.HEIGHT - top);
         vBox.setMinWidth(Const.W50);
-        TitledPane pane1 = new TitledPane("t1", pc);
+        TitledPane pane1 = new TitledPane();
         pane1.setMinHeight(Const.H50 - (top/2));
         TitledPane pane2 = new TitledPane();
         pane2.setText("Panel");

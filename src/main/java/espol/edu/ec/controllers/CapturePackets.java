@@ -15,10 +15,7 @@ import org.pcap4j.core.PcapHandle;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
-import org.pcap4j.packet.DnsPacket;
-import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
-import org.pcap4j.packet.TcpPacket;
 
 /**
  *
@@ -85,6 +82,8 @@ public class CapturePackets {
     private void capture(){
         PacketListener listener = (Packet packet) -> {
             capturePackets.add(packet);
+            System.out.println(packet);
+            System.out.println(packet.length());
         };
         try {
             int maxPackets = 1;
