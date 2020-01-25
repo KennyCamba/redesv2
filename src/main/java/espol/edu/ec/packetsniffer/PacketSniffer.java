@@ -5,17 +5,12 @@
  */
 package espol.edu.ec.packetsniffer;
 
-import espol.edu.ec.models.TablePane;
-import espol.edu.ec.models.TcpPane;
-import espol.edu.ec.views.GraphPane;
 import espol.edu.ec.views.ProtocolChart;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;

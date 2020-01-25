@@ -83,7 +83,7 @@ public class CapturePackets {
         PacketListener listener = (Packet packet) -> {
             capturePackets.add(packet);
             System.out.println(packet);
-            System.out.println(packet.length());
+            //System.out.println(packet.length());
         };
         try {
             int maxPackets = 1;

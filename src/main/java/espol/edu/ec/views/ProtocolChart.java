@@ -35,8 +35,6 @@ public class ProtocolChart extends Panel {
     private PieChart.Data ipv4;
     private PieChart.Data ethernet;
     private int init;
-    private ScheduledExecutorService scheduledExecutorService;
-    private boolean pause = false;
 
     public ProtocolChart() {
         super("Diagrama de protocolos");
@@ -59,8 +57,9 @@ public class ProtocolChart extends Panel {
         this.getChildren().add(sp);
     }
 
+    @Override
     public void run(){
-        scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
+        super.run();
         scheduledExecutorService.scheduleAtFixedRate(()->{
             if(!pause){
                 List<Packet> packets = CapturePackets.getInstance().getCapturePackets();
@@ -73,18 +72,6 @@ public class ProtocolChart extends Panel {
 
         }, 0, 1, TimeUnit.SECONDS);
 
-    }
-
-    public void stop(){
-        if(scheduledExecutorService != null){
-            scheduledExecutorService.shutdownNow();
-            pause = false;
-        }
-
-    }
-
-    public void setPause(boolean pause){
-        this.pause = pause;
     }
 
     private void update(Packet next) {
@@ -106,4 +93,13 @@ public class ProtocolChart extends Panel {
         }
     }
 
+    @Override
+    public void stop() {
+        super.stop();
+        ipv4.setPieValue(0);
+        ethernet.setPieValue(0);
+        tcp.setPieValue(0);
+        udp.setPieValue(0);
+        dns.setPieValue(0);
+    }
 }

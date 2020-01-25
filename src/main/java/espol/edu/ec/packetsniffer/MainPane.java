@@ -7,11 +7,15 @@ package espol.edu.ec.packetsniffer;
 
 import espol.edu.ec.controllers.CapturePackets;
 import espol.edu.ec.views.ActionButton;
+
+import java.io.File;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import espol.edu.ec.views.BytesChart;
+import espol.edu.ec.views.PacketTable;
 import espol.edu.ec.views.ProtocolChart;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -36,7 +40,9 @@ public class MainPane extends BorderPane{
     private ActionButton play;
     private ActionButton stop;
     private double top;
+    BytesChart bytesChart = new BytesChart();
     ProtocolChart pc = new ProtocolChart();
+    PacketTable packetTable = new PacketTable();
     
     public MainPane(List<PcapNetworkInterface> devices){
         this.listDevices = devices;
@@ -93,11 +99,15 @@ public class MainPane extends BorderPane{
                cp.pause();
                play.setImage(replay);
                pc.setPause(true);
+               packetTable.setPause(true);
+               bytesChart.setPause(true);
            }else if(play.getImage().equals(replay)){
                try {
                    cp.play(); 
                    play.setImage(pause);
                    pc.setPause(false);
+                   packetTable.setPause(false);
+                   bytesChart.setPause(false);
                } catch (Exception ex) {
                    Logger.getLogger(MainPane.class.getName()).log(Level.SEVERE, null, ex);
                }
@@ -106,6 +116,8 @@ public class MainPane extends BorderPane{
                 try {
                     cp.play();
                     pc.run();
+                    packetTable.run();
+                    bytesChart.run();
                     play.setImage(pause);
                     stop.setDisable(false); 
                 } catch (Exception ex) {
@@ -119,11 +131,13 @@ public class MainPane extends BorderPane{
             play.setImage(pImg); 
             stop.setDisable(true);
             pc.stop();
+            bytesChart.stop();
+            packetTable.stop();
         }); 
     }
 
     private void lefPanel(){
-        TitledPane pane = new TitledPane("t1", pc);
+        TitledPane pane = new TitledPane("t1", bytesChart);
         this.setLeft(pane);
         pane.setMinHeight(Const.HEIGHT - top);
         pane.setMinWidth(Const.W50);
@@ -136,8 +150,10 @@ public class MainPane extends BorderPane{
         vBox.setMinWidth(Const.W50);
         TitledPane pane1 = new TitledPane();
         pane1.setMinHeight(Const.H50 - (top/2));
+        pane1.setContent(packetTable);
         TitledPane pane2 = new TitledPane();
         pane2.setText("Panel");
+        pane2.setContent(pc);
         pane2.setMinHeight(Const.H50 - (top/2));
         vBox.getChildren().addAll(pane1, pane2);
         this.setRight(vBox);
