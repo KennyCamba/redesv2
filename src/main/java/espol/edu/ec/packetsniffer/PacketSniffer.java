@@ -47,17 +47,6 @@ public class PacketSniffer extends Application{
     public void start(Stage stage) throws Exception {
         this.mainPane = new MainPane(devices);
         stage.setScene(new Scene(this.mainPane));
-        double top = mainPane.getTop().getBoundsInLocal().getHeight();
-        VBox right = new VBox();
-        List<Pane> screens = new ArrayList<>();
-        screens.add(new TcpPane());
-        screens.add(new TablePane());
-        screens.add(pc);
-        GraphPane gp = new GraphPane(Const.W50, (Const.HEIGHT - top)/2, screens);
-        gp.setContent(new TcpPane());
-        right.getChildren().addAll(gp, new GraphPane(Const.W50, (Const.HEIGHT - top)/2, screens));
-        mainPane.setCenter(new GraphPane(Const.W50, Const.HEIGHT - top, screens));
-        mainPane.setRight(right); 
         stage.show();
     }
     
@@ -71,8 +60,6 @@ public class PacketSniffer extends Application{
        
         try {
             allDevs = Pcaps.findAllDevs();
-            for(PcapNetworkInterface p: allDevs){
-            }
         } catch (PcapNativeException e) {
             throw new IOException(e.getMessage());
         }

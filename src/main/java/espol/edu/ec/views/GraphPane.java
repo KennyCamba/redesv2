@@ -106,8 +106,10 @@ public class GraphPane<E extends Panel> extends VBox{
             txtBar.setText(pane.toString());
             components.setSpacing(widht - txtBar.getLayoutBounds().getWidth() - widht*0.08);  
             Platform.runLater(() -> {
-                titles.getItems().clear();
-                titles.getItems().addAll(screens);
+                //titles.getItems().clear();
+                //titles.getItems().addAll(screens);
+                content.getChildren().clear();
+                content.getChildren().add(pane);
             });
         //}
     }

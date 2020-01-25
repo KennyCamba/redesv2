@@ -17,7 +17,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.chart.PieChart;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import org.pcap4j.packet.DnsPacket;
 import org.pcap4j.packet.EthernetPacket;
@@ -50,7 +49,6 @@ public class ProtocolChart extends Panel {
         dns = new PieChart.Data("DNS", 0);
         ipv4 = new PieChart.Data("IPv4", 0);
         ethernet = new PieChart.Data("ETHERNET", 0);
-        //icmp = new PieChart.Data("ICMP", 0);
         ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(tcp, udp, dns, ipv4, ethernet);
         chart = new PieChart(pieChartData);
         data = new HashMap<>();
@@ -68,18 +66,15 @@ public class ProtocolChart extends Panel {
         sp.setAlignment(Pos.CENTER); 
         sp.getChildren().add(chart);
         this.getChildren().add(sp);
-        run = new Runnable() {
-            @Override
-            public void run() {
-                Iterator<Packet> iter = CapturePackets.getInstance().getCapturePackets().iterator();
-                while(true){
-                    System.out.print("");
-                    while(iter.hasNext()){
-                        calcular(iter.next());
-                        if(tiempo >= 10){
-                            update();
-                            tiempo = 0;
-                        }
+        run = () -> {
+            Iterator<Packet> iter = CapturePackets.getInstance().getCapturePackets().iterator();
+            while(iter.hasNext()){
+                System.out.print("");
+                while(iter.hasNext()){
+                    calculate(iter.next());
+                    if(tiempo >= 10){
+                        update();
+                        tiempo = 0;
                     }
                 }
             }
@@ -93,21 +88,28 @@ public class ProtocolChart extends Panel {
     private void update() {
         Platform.runLater(() ->{
            for(String k: data.keySet()){
-                if(k.equals("TCP"))
-                    tcp.setPieValue(tcp.getPieValue() + data.get(k)); 
-                else if(k.equals("UDP"))
-                    udp.setPieValue(udp.getPieValue() + data.get(k));
-                else if(k.equals("IPV4"))
-                    ipv4.setPieValue(ipv4.getPieValue() + data.get(k));
-                else if(k.equals("ETHERNET"))
-                    ethernet.setPieValue(ethernet.getPieValue() + data.get(k));
-                else if(k.equals("DNS"))
-                    dns.setPieValue(dns.getPieValue() + data.get(k));
+               switch (k) {
+                   case "TCP":
+                       tcp.setPieValue(tcp.getPieValue() + data.get(k));
+                       break;
+                   case "UDP":
+                       udp.setPieValue(udp.getPieValue() + data.get(k));
+                       break;
+                   case "IPV4":
+                       ipv4.setPieValue(ipv4.getPieValue() + data.get(k));
+                       break;
+                   case "ETHERNET":
+                       ethernet.setPieValue(ethernet.getPieValue() + data.get(k));
+                       break;
+                   case "DNS":
+                       dns.setPieValue(dns.getPieValue() + data.get(k));
+                       break;
+               }
            }
         });
     }
 
-    private void calcular(Packet next) {
+    private void calculate(Packet next) {
         if(next.contains(IpV4Packet.class)){
             data.put("IPV4", data.get("IPV4") + 1);
         }else if(next.contains(EthernetPacket.class)){

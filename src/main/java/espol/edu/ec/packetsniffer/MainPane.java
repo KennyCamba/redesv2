@@ -11,12 +11,16 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import espol.edu.ec.views.ProtocolChart;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
@@ -31,6 +35,8 @@ public class MainPane extends BorderPane{
     private final List<PcapNetworkInterface> listDevices;
     private ActionButton play;
     private ActionButton stop;
+    private double top;
+    ProtocolChart pc = new ProtocolChart();
     
     public MainPane(List<PcapNetworkInterface> devices){
         this.listDevices = devices;
@@ -45,6 +51,8 @@ public class MainPane extends BorderPane{
     private void init(){
         loadComboBox(); 
         topPanel();
+        lefPanel();
+        rightPanel();
     }
 
     private void loadComboBox() {
@@ -71,7 +79,8 @@ public class MainPane extends BorderPane{
         txt.setFont(Font.font(Const.H5 * 0.4)); 
         content.setPadding(new Insets(Const.H1, Const.W1, Const.H1, Const.W1)); 
         content.getChildren().addAll(txt, devices, play, stop);
-        this.setTop(content); 
+        this.setTop(content);
+        top = this.getTop().getBoundsInLocal().getHeight();
     }
 
     private void events() {
@@ -94,7 +103,7 @@ public class MainPane extends BorderPane{
                cp.setDevice(devices.getValue()); 
                 try {
                     cp.play();
-                    PacketSniffer.pc.initCtl();
+                    pc.initCtl();
                     play.setImage(pause);
                     stop.setDisable(false); 
                 } catch (Exception ex) {
@@ -109,5 +118,30 @@ public class MainPane extends BorderPane{
             stop.setDisable(true); 
         }); 
     }
-    
+
+    private void lefPanel(){
+        ProtocolChart pc = new ProtocolChart();
+        pc.initCtl();
+        pc.setAlignment(Pos.CENTER);
+        TitledPane pane = new TitledPane();
+        this.setLeft(pane);
+        pane.setMinHeight(Const.HEIGHT - top);
+        pane.setMinWidth(Const.W50);
+        pc.setPadding(new Insets(Const.H5, Const.H5, Const.H5, Const.H5));
+    }
+
+    private void rightPanel(){
+        VBox vBox = new VBox();
+
+        vBox.setMinHeight(Const.HEIGHT - top);
+        vBox.setMinWidth(Const.W50);
+        TitledPane pane1 = new TitledPane("t1", pc);
+        pane1.setMinHeight(Const.H50 - (top/2));
+        TitledPane pane2 = new TitledPane();
+        pane2.setText("Panel");
+        pane2.setMinHeight(Const.H50 - (top/2));
+        vBox.getChildren().addAll(pane1, pane2);
+        this.setRight(vBox);
+    }
+
 }

@@ -85,9 +85,6 @@ public class CapturePackets {
     private void capture(){
         PacketListener listener = (Packet packet) -> {
             capturePackets.add(packet);
-            System.out.println(packet);
-            //System.out.println(".....................................................");
-            //System.out.println(((DnsPacket)packet.get(DnsPacket.class)).getHeader());
         };
         try {
             int maxPackets = 1;
@@ -102,6 +99,7 @@ public class CapturePackets {
     }
     
     public List<Packet> getCapturePackets(){
-        return this.capturePackets;
+        Object obj = ((ArrayList<Packet>)this.capturePackets).clone();
+        return obj instanceof ArrayList ? (ArrayList<Packet>)obj: null;
     }
 }
