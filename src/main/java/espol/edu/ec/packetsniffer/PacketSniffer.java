@@ -5,7 +5,6 @@
  */
 package espol.edu.ec.packetsniffer;
 
-import espol.edu.ec.views.ProtocolChart;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +22,8 @@ import org.pcap4j.core.Pcaps;
 public class PacketSniffer extends Application{
     private List<PcapNetworkInterface> devices;
     private MainPane mainPane;
-    public static ProtocolChart pc = new ProtocolChart();
-    public static void main(String[] args) throws IOException {
-        
+
+    public static void main(String[] args) {
         launch(args);
     }
     
@@ -39,7 +37,7 @@ public class PacketSniffer extends Application{
     }
     
     @Override
-    public void start(Stage stage) throws Exception {
+    public void start(Stage stage) {
         this.mainPane = new MainPane(devices);
         stage.setScene(new Scene(this.mainPane));
         stage.show();
@@ -47,12 +45,11 @@ public class PacketSniffer extends Application{
     
     @Override
     public void stop(){
-        
+        this.mainPane.stop();
     }
     
     private List<PcapNetworkInterface> getAllDevices() throws IOException{
-        List<PcapNetworkInterface> allDevs = null;
-       
+        List<PcapNetworkInterface> allDevs;
         try {
             allDevs = Pcaps.findAllDevs();
         } catch (PcapNativeException e) {

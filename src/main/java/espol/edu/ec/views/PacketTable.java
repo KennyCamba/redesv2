@@ -28,7 +28,7 @@ public class PacketTable extends Panel {
     private int init;
     
     public PacketTable(){
-        super("Tabla de paquetes");
+        super("Tabla de Paquetes");
         table = new TableView<>();
         number = new TableColumn<>(new String("N°".getBytes(), StandardCharsets.UTF_8));
         capturedAt = new TableColumn<>("Tiempo");

@@ -9,10 +9,10 @@ import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import org.pcap4j.packet.Packet;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class BytesChart extends Panel {
@@ -23,7 +23,7 @@ public class BytesChart extends Panel {
     private int init;
 
     public BytesChart() {
-        super("Transmisión de Bytes");
+        super(new String("Transmisión de Bytes".getBytes(), StandardCharsets.UTF_8));
         xAxis = new CategoryAxis();
         yAxis = new NumberAxis();
         bytes = new LineChart<>(xAxis, yAxis);

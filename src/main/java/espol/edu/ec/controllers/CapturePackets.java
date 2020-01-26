@@ -76,6 +76,7 @@ public class CapturePackets {
         if(device != null && isRun){
             pause = false;
             isRun = false;
+            capturePackets.clear();
         }
     }
     
@@ -83,7 +84,6 @@ public class CapturePackets {
         PacketListener listener = (Packet packet) -> {
             capturePackets.add(packet);
             System.out.println(packet);
-            //System.out.println(packet.length());
         };
         try {
             int maxPackets = 1;

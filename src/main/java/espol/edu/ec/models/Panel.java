@@ -30,6 +30,10 @@ public class Panel extends StackPane{
         return title;
     }
 
+    public String getTitle(){
+        return title;
+    }
+
     public void run(){
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
     }
