@@ -8,7 +8,9 @@ package espol.edu.ec.packetsniffer;
 import espol.edu.ec.controllers.CapturePackets;
 import espol.edu.ec.models.Panel;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,13 +21,18 @@ import espol.edu.ec.views.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
@@ -38,13 +45,19 @@ import org.pcap4j.core.PcapNetworkInterface;
 public class MainPane extends BorderPane{
     private final ComboBox<PcapNetworkInterface> devices;
     private final List<PcapNetworkInterface> listDevices;
-    //private ActionButton play;
+    //private ActionButton play2;
     //private ActionButton stop;
     private Button play;
     private Button stop;
     private double top;
     private List<Panel> charts;
     private Timer timer;
+    private MenuBar menu;
+    private Menu state;
+    private Menu chart;
+    private  Menu file;
+    private boolean isStatic;
+    private VBox right;
     
     public MainPane(List<PcapNetworkInterface> devices){
         this.listDevices = devices;
@@ -55,11 +68,87 @@ public class MainPane extends BorderPane{
         stop = new Button("stop");
         charts = new ArrayList<>();
         timer = new Timer(0);
+        menu = new MenuBar();
+        state = new Menu("Comportamiento");
+        chart = new Menu("Graficos");
+        file = new Menu("Archivo");
+        isStatic = false;
+        right = new VBox();
         init();
         events();
+        createMenu();
     }
-    
-    
+
+    private void createMenu() {
+        MenuItem exit = new MenuItem("Salir");
+        file.getItems().add(exit);
+        exit.setOnAction(e -> Platform.exit());
+        CheckMenuItem random = new CheckMenuItem("Cambio aleatorio");
+        CheckMenuItem stati = new CheckMenuItem("Estatico");
+        random.setSelected(true);
+        state.getItems().addAll(random, stati);
+        random.setOnAction(e -> {
+            stati.setSelected(false);
+            isStatic = false;
+        });
+        stati.setOnAction(e -> {
+            random.setSelected(false);
+            isStatic = true;
+        });
+        Menu main = new Menu("Principal");
+        Menu second1 = new Menu("Secundario 1");
+        Menu second2 = new Menu("Secundario 2");
+        for(Panel p: charts){
+            CheckMenuItem menuItem1 = new CheckMenuItem(p.getTitle());
+            menuItem1.setOnAction(e-> {
+                String name = menuItem1.getText();
+                for(Panel panel: charts){
+                    if(panel.getTitle().equals(name)){
+                        lefPanel(p);
+                        for(MenuItem item: main.getItems()){
+                            CheckMenuItem checkMenuItem = (CheckMenuItem)item;
+                            if(checkMenuItem != menuItem1)
+                                checkMenuItem.setSelected(false);
+                        }
+                    }
+                }
+            });
+            CheckMenuItem menuItem2 = new CheckMenuItem(p.getTitle());
+            menuItem2.setOnAction(e-> {
+                String name = menuItem2.getText();
+                for(Panel panel: charts){
+                    if(panel.getTitle().equals(name)){
+                        rightTopPanel(p);
+                        for(MenuItem item: second1.getItems()){
+                            CheckMenuItem checkMenuItem = (CheckMenuItem)item;
+                            if(checkMenuItem != menuItem2)
+                                checkMenuItem.setSelected(false);
+                        }
+                    }
+                }
+            });
+            CheckMenuItem menuItem3 = new CheckMenuItem(p.getTitle());
+            menuItem3.setOnAction(e-> {
+                String name = menuItem3.getText();
+                for(Panel panel: charts){
+                    if(panel.getTitle().equals(name)){
+                        rightBottomPanel(p);
+                        for(MenuItem item: second2.getItems()){
+                            CheckMenuItem checkMenuItem = (CheckMenuItem)item;
+                            if(checkMenuItem != menuItem3)
+                                checkMenuItem.setSelected(false);
+                        }
+                    }
+                }
+            });
+            main.getItems().add(menuItem1);
+            second1.getItems().add(menuItem2);
+            second2.getItems().add(menuItem3);
+        }
+        chart.getItems().addAll(main, second1, second2);
+        menu.getMenus().addAll(file, state, chart);
+    }
+
     private void init(){
         charts.add(new PacketTable());
         charts.add(new BytesChart());
@@ -68,16 +157,22 @@ public class MainPane extends BorderPane{
         charts.add(new Stats());
         loadComboBox(); 
         topPanel();
+        right.setMinHeight(Const.HEIGHT - top);
+        right.setMinWidth(Const.W50);
+        this.setRight(right);
         fullScreen();
     }
 
     private void play(){
-        timer = new Timer(5);
-        Thread t = new Thread(timer);
-        t.start();
+        if(!isStatic){
+            timer = new Timer(60);
+            Thread t = new Thread(timer);
+            t.start();
+        }
         for(Panel panel: charts){
             panel.run();
         }
+        state.setDisable(true);
     }
 
     private void pause(){
@@ -100,6 +195,7 @@ public class MainPane extends BorderPane{
         for(Panel panel: charts){
             panel.stop();
         }
+        state.setDisable(false);
     }
 
     private void loadComboBox() {
@@ -118,7 +214,13 @@ public class MainPane extends BorderPane{
     }
 
     private void topPanel() {
-        stop.setDisable(true); 
+        stop.setDisable(true);
+        StackPane sp = new StackPane();
+        Rectangle rectangle = new Rectangle(Const.WIDTH, Const.H1, Color.TRANSPARENT);
+        menu.setVisible(false);
+        rectangle.setOnMouseEntered(e -> menu.setVisible(true));
+        menu.setOnMouseExited(e -> menu.setVisible(false));
+        sp.setAlignment(Pos.TOP_CENTER);
         HBox content = new HBox();
         content.setSpacing(Const.W1);
         content.setAlignment(Pos.CENTER_LEFT); 
@@ -126,14 +228,16 @@ public class MainPane extends BorderPane{
         txt.setFont(Font.font(Const.H5 * 0.4)); 
         content.setPadding(new Insets(Const.H1, Const.W1, Const.H1, Const.W1)); 
         content.getChildren().addAll(txt, devices, play, stop);
-        this.setTop(content);
+        sp.getChildren().addAll(content, rectangle, menu);
+        this.setTop(sp);
         top = this.getTop().getBoundsInLocal().getHeight();
     }
 
     private void fullScreen(){
         Collections.shuffle(charts);
         lefPanel(charts.get(0));
-        rightPanel(charts.get(1), charts.get(2));
+        rightTopPanel(charts.get(1));
+        rightBottomPanel(charts.get(2));
     }
 
     private void events() {
@@ -199,23 +303,20 @@ public class MainPane extends BorderPane{
             chart.setPadding(new Insets(Const.H5, Const.H5, Const.H5, Const.H5));
     }
 
-    private void rightPanel(Panel chartTop, Panel chartBottom){
-        VBox vBox = new VBox();
-        vBox.setMinHeight(Const.HEIGHT - top);
-        vBox.setMinWidth(Const.W50);
-
+    private void rightTopPanel(Panel chartTop){
         TitledPane pane1 = new TitledPane(chartTop.getTitle(), chartTop);
         pane1.setMinHeight(Const.H50 - (top/2));
         if(!(chartTop instanceof PacketTable))
             chartTop.setPadding(new Insets(Const.W1, Const.W1, Const.W1, Const.W1));
+        right.getChildren().add(0, pane1);
+    }
 
+    private void rightBottomPanel(Panel chartBottom){
         TitledPane pane2 = new TitledPane(chartBottom.getTitle(), chartBottom);
         pane2.setMinHeight(Const.H50 - (top/2));
         if(!(chartBottom instanceof PacketTable))
             chartBottom.setPadding(new Insets(Const.W1, Const.W1, Const.W1, Const.W1));
-
-        vBox.getChildren().addAll(pane1, pane2);
-        this.setRight(vBox);
+        right.getChildren().add(1, pane2);
     }
 
     private class Timer implements Runnable {

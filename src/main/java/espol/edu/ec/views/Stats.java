@@ -108,12 +108,12 @@ public class Stats extends Panel {
         }
         if(min < 10 && min > 0){
             text = "0" + min + text;
-        }else if(min > 10) {
+        }else if(min > 9) {
             text = min + text;
         }
         if(hour < 10 && hour > 0){
             text = "0" + hour + ":" + text;
-        }else if(hour > 10){
+        }else if(hour > 9){
             text = hour + ":" + text;
         }
         return text;

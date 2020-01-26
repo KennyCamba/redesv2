@@ -114,6 +114,9 @@ public class PortsChart extends Panel {
     @Override
     public void stop() {
         super.stop();
-        chart.getData().clear();
+        sources.getData().clear();
+        destinations.getData().clear();
+        knowPortsSrc.clear();
+        knowPortsDst.clear();
     }
 }

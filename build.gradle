@@ -9,7 +9,8 @@ sourceCompatibility = 1.8
 sourceSets {
     main {
         resources {
-            srcDirs = ["resources"]
+            srcDirs = ["src/main/java"]
+            includes = ["**/*.css", "**/*.png"]
         }
     }
 }
