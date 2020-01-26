@@ -40,6 +40,7 @@ public class PacketSniffer extends Application{
     public void start(Stage stage) {
         this.mainPane = new MainPane(devices);
         stage.setScene(new Scene(this.mainPane));
+        stage.setFullScreen(true);
         stage.show();
     }
     

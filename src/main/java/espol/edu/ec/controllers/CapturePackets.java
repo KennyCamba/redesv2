@@ -86,6 +86,7 @@ public class CapturePackets {
             capturePackets.clear();
             init = 0;
             timePause = 0;
+            bytes = 0;
         }
     }
     

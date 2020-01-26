@@ -17,7 +17,7 @@ public class Const {
         //
     }
     
-    private static final Rectangle2D SCREEN = Screen.getPrimary().getVisualBounds();
+    private static final Rectangle2D SCREEN = Screen.getPrimary().getBounds();
     public static final double WIDTH = SCREEN.getWidth();
     public static final double HEIGHT = SCREEN.getHeight();
     public static final double W1 = WIDTH * 0.01;

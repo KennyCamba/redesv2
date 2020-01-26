@@ -15,10 +15,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import espol.edu.ec.views.BytesChart;
-import espol.edu.ec.views.PacketTable;
-import espol.edu.ec.views.PortsChart;
-import espol.edu.ec.views.ProtocolChart;
+import espol.edu.ec.views.*;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -68,6 +65,7 @@ public class MainPane extends BorderPane{
         charts.add(new BytesChart());
         charts.add(new ProtocolChart());
         charts.add(new PortsChart());
+        charts.add(new Stats());
         loadComboBox(); 
         topPanel();
         fullScreen();
