@@ -73,6 +73,8 @@ public class PacketTable extends Panel {
                 for(int i=init; i<packets.size(); i++){
                     Packet packet = packets.get(i);
                     update(i+1, packet);
+                    if(table.getItems().size() > 700)
+                        Platform.runLater(() -> table.getItems().remove(0));
                 }
                 init = packets.size();
             }

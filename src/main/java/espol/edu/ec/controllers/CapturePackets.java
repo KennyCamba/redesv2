@@ -9,11 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.pcap4j.core.NotOpenException;
-import org.pcap4j.core.PacketListener;
-import org.pcap4j.core.PcapHandle;
-import org.pcap4j.core.PcapNativeException;
-import org.pcap4j.core.PcapNetworkInterface;
+
+import org.pcap4j.core.*;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.packet.Packet;
 
@@ -29,11 +26,17 @@ public class CapturePackets {
     private boolean isRun;
     private boolean pause;
     private List<Packet> capturePackets;
+    private int bytes;
+    private long init;
+    private long timePause;
     
     private CapturePackets(){
         capturePackets = new ArrayList<>();
         isRun = false;
         pause = false;
+        bytes = 0;
+        init = 0;
+        timePause = 0;
         run = () -> {
             while(isRun){
                 System.out.print("");
@@ -59,17 +62,21 @@ public class CapturePackets {
             handle = device.openLive(snapshotLength, PromiscuousMode.PROMISCUOUS, readTimeout);
             isRun = true;
             Thread t = new Thread(run);
+            init = System.currentTimeMillis();
             t.start();
         }else if(pause){
             pause = false;
+            timePause = System.currentTimeMillis() - timePause;
         }else {
             throw new Exception("Action not allowed!");
         }
     }
     
     public void pause(){
-        if(device != null && isRun)
+        if(device != null && isRun){
             pause = true;
+            timePause = System.currentTimeMillis();
+        }
     }
     
     public void stop(){
@@ -77,12 +84,15 @@ public class CapturePackets {
             pause = false;
             isRun = false;
             capturePackets.clear();
+            init = 0;
+            timePause = 0;
         }
     }
     
     private void capture(){
         PacketListener listener = (Packet packet) -> {
             capturePackets.add(packet);
+            bytes += packet.length();
             System.out.println(packet);
         };
         try {
@@ -100,5 +110,21 @@ public class CapturePackets {
     public List<Packet> getCapturePackets(){
         Object obj = ((ArrayList<Packet>)this.capturePackets).clone();
         return obj instanceof ArrayList ? (ArrayList<Packet>)obj: null;
+    }
+
+    public PcapStat getStats(){
+        try {
+            return handle.getStats();
+        } catch (PcapNativeException | NotOpenException e) {
+            return null;
+        }
+    }
+
+    public int getTotalBytes(){
+        return bytes;
+    }
+
+    public long getCurrentTime(){
+        return device != null && isRun ? System.currentTimeMillis() - init - timePause: 0;
     }
 }

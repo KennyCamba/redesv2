@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 
 import espol.edu.ec.views.BytesChart;
 import espol.edu.ec.views.PacketTable;
+import espol.edu.ec.views.PortsChart;
 import espol.edu.ec.views.ProtocolChart;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -56,6 +57,7 @@ public class MainPane extends BorderPane{
         play = new Button("play");
         stop = new Button("stop");
         charts = new ArrayList<>();
+        timer = new Timer(0);
         init();
         events();
     }
@@ -65,13 +67,14 @@ public class MainPane extends BorderPane{
         charts.add(new PacketTable());
         charts.add(new BytesChart());
         charts.add(new ProtocolChart());
+        charts.add(new PortsChart());
         loadComboBox(); 
         topPanel();
         fullScreen();
     }
 
     private void play(){
-        timer = new Timer(10);
+        timer = new Timer(5);
         Thread t = new Thread(timer);
         t.start();
         for(Panel panel: charts){
