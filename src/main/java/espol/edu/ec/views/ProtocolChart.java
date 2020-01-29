@@ -6,6 +6,7 @@
 package espol.edu.ec.views;
 
 import espol.edu.ec.controllers.CapturePackets;
+import espol.edu.ec.models.PacketTime;
 import espol.edu.ec.models.Panel;
 
 import java.util.List;
@@ -62,9 +63,9 @@ public class ProtocolChart extends Panel {
         super.run();
         scheduledExecutorService.scheduleAtFixedRate(()->{
             if(!pause){
-                List<Packet> packets = CapturePackets.getInstance().getCapturePackets();
+                List<PacketTime> packets = CapturePackets.getInstance().getCapturePackets();
                 for(int i=init; i<packets.size(); i++){
-                    Packet packet = packets.get(i);
+                    Packet packet = packets.get(i).getPacket();
                     update(packet);
                 }
                 init = packets.size();
@@ -90,6 +91,14 @@ public class ProtocolChart extends Panel {
         }
         if(next.contains(DnsPacket.class)){
             Platform.runLater(() -> dns.setPieValue(dns.getPieValue() + 1));
+        }
+    }
+
+    @Override
+    public void runOffline() {
+        List<PacketTime> packetTimes = CapturePackets.getInstance().getCapturePackets();
+        for(PacketTime packet: packetTimes){
+            update(packet.getPacket());
         }
     }
 

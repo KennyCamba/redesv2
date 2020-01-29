@@ -931,21 +931,21 @@ VBox > .split-menu-button.last > .arrow-button {
 }
 
 .menu-bar {
-    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-color: rgba(0, 0, 0, 0.3);
 }
 .menu {
-    -fx-label-padding: 3px;
+    -fx-label-padding: 1px;
 }
 .menu .label, .menu-item .label {
     -fx-text-fill: #fff;
     -fx-font-weight: bold;
 }
 .menu:hover, .menu:focused, .menu:pressed {
-    -fx-background-color: rgba(0, 0, 0, 0.2);
+    -fx-background-color: rgba(0, 0, 0, 0.3);
 }
 .menu-item:hover {
-    -fx-background-color: rgba(0, 0, 0, 0.4);
+    -fx-background-color: rgba(0, 0, 0, 0.5);
 }
 .context-menu {
-    -fx-background-color: rgba(0, 0, 0, 0.3);
+    -fx-background-color: rgba(0, 0, 0, 0.4);
 }

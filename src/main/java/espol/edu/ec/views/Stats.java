@@ -1,6 +1,7 @@
 package espol.edu.ec.views;
 
 import espol.edu.ec.controllers.CapturePackets;
+import espol.edu.ec.models.PacketTime;
 import espol.edu.ec.models.Panel;
 import espol.edu.ec.packetsniffer.Const;
 import javafx.application.Platform;
@@ -11,6 +12,7 @@ import javafx.scene.text.Text;
 import org.pcap4j.core.PcapStat;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Stats extends Panel {
@@ -81,6 +83,20 @@ public class Stats extends Panel {
             }
 
         }, 0, 1, TimeUnit.SECONDS);
+    }
+
+    @Override
+    public void runOffline() {
+        List<PacketTime> list = CapturePackets.getInstance().getCapturePackets();
+        Platform.runLater(()->{
+            receivedValue.setText(String.valueOf(list.size()));
+            droppedValue.setText("No disponible");
+            droppedByIfValue.setText("No disponible");
+            capturedValue.setText(String.valueOf(list.size()));
+            speedValue.setText("No disponible");
+            bytesValue.setText(CapturePackets.getInstance().getTotalBytes() + " [bytes]");
+            timeValue.setText("No disponible");
+        });
     }
 
     @Override

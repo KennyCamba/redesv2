@@ -1,6 +1,7 @@
 package espol.edu.ec.views;
 
 import espol.edu.ec.controllers.CapturePackets;
+import espol.edu.ec.models.PacketTime;
 import espol.edu.ec.models.Panel;
 import javafx.application.Platform;
 import javafx.scene.chart.BarChart;
@@ -54,9 +55,9 @@ public class PortsChart extends Panel {
         super.run();
         scheduledExecutorService.scheduleAtFixedRate(()->{
             if(!pause){
-                List<Packet> packets = CapturePackets.getInstance().getCapturePackets();
+                List<PacketTime> packets = CapturePackets.getInstance().getCapturePackets();
                 for(int i=init; i<packets.size(); i++){
-                    Packet packet = packets.get(i);
+                    Packet packet = packets.get(i).getPacket();
                     update(packet);
                 }
                 init = packets.size();
@@ -74,6 +75,14 @@ public class PortsChart extends Panel {
             UdpPacket udp = packet.get(UdpPacket.class);
             updateSrc(udp.getHeader().getSrcPort().name(), udp.getHeader().getSrcPort().valueAsInt());
             updateDst(udp.getHeader().getDstPort().name(), udp.getHeader().getDstPort().valueAsInt());
+        }
+    }
+
+    @Override
+    public void runOffline() {
+        List<PacketTime> packetTimes = CapturePackets.getInstance().getCapturePackets();
+        for(PacketTime packet: packetTimes){
+            update(packet.getPacket());
         }
     }
 

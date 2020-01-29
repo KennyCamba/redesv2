@@ -6,7 +6,6 @@
 package espol.edu.ec.packetsniffer;
 
 import java.io.IOException;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.application.Application;
@@ -39,7 +38,7 @@ public class PacketSniffer extends Application{
     
     @Override
     public void start(Stage stage) {
-        this.mainPane = new MainPane(devices);
+        this.mainPane = new MainPane(stage, devices);
         stage.setScene(new Scene(this.mainPane));
         stage.setFullScreen(true);
         stage.getScene().getStylesheets().add("espol/edu/ec/css/style.css");

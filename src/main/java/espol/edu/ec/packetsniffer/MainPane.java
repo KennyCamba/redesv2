@@ -6,14 +6,15 @@
 package espol.edu.ec.packetsniffer;
 
 import espol.edu.ec.controllers.CapturePackets;
+import espol.edu.ec.models.PacketTime;
 import espol.edu.ec.models.Panel;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -26,7 +27,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -35,18 +35,18 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import org.pcap4j.core.PcapNetworkInterface;
 
 /**
  *
- * @author kcamb
+ *
  */
 public class MainPane extends BorderPane{
     private final ComboBox<PcapNetworkInterface> devices;
     private final List<PcapNetworkInterface> listDevices;
-    //private ActionButton play2;
-    //private ActionButton stop;
     private Button play;
     private Button stop;
     private double top;
@@ -58,12 +58,15 @@ public class MainPane extends BorderPane{
     private  Menu file;
     private boolean isStatic;
     private VBox right;
+    private MenuItem export;
+    private MenuItem importMenu;
+    private Stage stage;
+    private FileChooser chooser;
     
-    public MainPane(List<PcapNetworkInterface> devices){
+    public MainPane(Stage stage, List<PcapNetworkInterface> devices){
+        this.stage = stage;
         this.listDevices = devices;
         this.devices = new ComboBox<>();
-        //play = new ActionButton(new Image(Paths.get("espol", "edu", "ec", "resources", "imgs", "play.png").toString(), Const.H5*0.4, Const.H5*0.4, true, true));
-        //stop = new ActionButton(new Image(Paths.get("espol", "edu", "ec", "resources", "imgs", "stop.png").toString(), Const.H5*0.4, Const.H5*0.4, true, true));
         play = new Button("play");
         stop = new Button("stop");
         charts = new ArrayList<>();
@@ -74,14 +77,20 @@ public class MainPane extends BorderPane{
         file = new Menu("Archivo");
         isStatic = false;
         right = new VBox();
+        chooser = new FileChooser();
         init();
         events();
         createMenu();
     }
 
     private void createMenu() {
+        export = new MenuItem("Exportar (*.pcap)");
+        importMenu = new MenuItem("Importar (*.pcap)");
+        export.setDisable(true);
+        exportEvent();
+        importEvent();
         MenuItem exit = new MenuItem("Salir");
-        file.getItems().add(exit);
+        file.getItems().addAll(importMenu, export, exit);
         exit.setOnAction(e -> Platform.exit());
         CheckMenuItem random = new CheckMenuItem("Cambio aleatorio");
         CheckMenuItem stati = new CheckMenuItem("Estatico");
@@ -149,7 +158,46 @@ public class MainPane extends BorderPane{
         menu.getMenus().addAll(file, state, chart);
     }
 
+    private void importEvent() {
+        importMenu.setOnAction(e-> {
+            if(!stop.isDisable()){
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setHeaderText("Esta seguro que desea importar un archivo?");
+                alert.setContentText("Los datos actuales seran eliminados");
+                stage.setAlwaysOnTop(true);
+                alert.initOwner(stage);
+                Optional<ButtonType> result = alert.showAndWait();
+                if(result.isPresent() && result.get() == ButtonType.OK){
+                    open();
+                }
+            }else{
+                open();
+            }
+        });
+    }
+
+    private void open(){
+        chooser.setTitle("Importar");
+        File file = chooser.showOpenDialog(stage);
+        if(file != null){
+            CapturePackets.getInstance().openOffline(file.getAbsolutePath());
+            load();
+        }
+    }
+
+    private void exportEvent() {
+        export.setOnAction(e-> {
+            chooser.setTitle("Exportar");
+            chooser.setInitialFileName("export.pcap");
+            File file = chooser.showSaveDialog(stage);
+            if(file != null){
+                CapturePackets.getInstance().savePackets(file.getAbsolutePath());
+            }
+        });
+    }
+
     private void init(){
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Pcap Files", "*.pcap"));
         charts.add(new PacketTable());
         charts.add(new BytesChart());
         charts.add(new ProtocolChart());
@@ -164,6 +212,7 @@ public class MainPane extends BorderPane{
     }
 
     private void play(){
+        //this.stop();
         if(!isStatic){
             timer = new Timer(60);
             Thread t = new Thread(timer);
@@ -173,6 +222,13 @@ public class MainPane extends BorderPane{
             panel.run();
         }
         state.setDisable(true);
+
+    }
+
+    private void load(){
+        for(Panel panel: charts){
+            panel.runOffline();
+        }
     }
 
     private void pause(){
@@ -196,6 +252,7 @@ public class MainPane extends BorderPane{
             panel.stop();
         }
         state.setDisable(false);
+        export.setDisable(true);
     }
 
     private void loadComboBox() {
@@ -241,22 +298,15 @@ public class MainPane extends BorderPane{
     }
 
     private void events() {
-        //Image pause = new Image(Paths.get("espol", "edu", "ec", "resources", "imgs", "pause.png").toString(), Const.H5*0.4, Const.H5*0.4, true, true);
-        //Image pImg = new Image(Paths.get("espol", "edu", "ec", "resources", "imgs", "play.png").toString(), Const.H5*0.4, Const.H5*0.4, true, true);
-        //Image replay = new Image(Paths.get("espol", "edu", "ec", "resources", "imgs", "replay.png").toString(), Const.H5*0.4, Const.H5*0.4, true, true);
         CapturePackets capture = CapturePackets.getInstance();
         play.setOnMouseClicked(e -> {
-           //if(play.getImage().equals(pause)){
             if(play.getText().equals("pause")){
                capture.pause();
-               //play.setImage(replay);
                 play.setText("replay");
                this.pause();
-           //}else if(play.getImage().equals(replay)){
             }else if(play.getText().equals("replay")){
                try {
                    capture.play();
-                   //play.setImage(pause);
                    play.setText("pause");
                    this.resume();
                } catch (Exception ex) {
@@ -269,12 +319,13 @@ public class MainPane extends BorderPane{
                     alert.setTitle("Error!!");
                     alert.setHeaderText(new String("Error de acción".getBytes(), StandardCharsets.UTF_8));
                     alert.setContentText(new String("No ha sleccionado ningún dispositivo de red".getBytes(), StandardCharsets.UTF_8));
+                    alert.initOwner(stage);
                     alert.show();
                 }else{
+                    export.setDisable(false);
                     capture.setDevice(device);
                     try {
                         capture.play();
-                        //play.setImage(pause);
                         play.setText("pause");
                         stop.setDisable(false);
                         this.play();
@@ -287,7 +338,6 @@ public class MainPane extends BorderPane{
         });
         stop.setOnMouseClicked(e-> {
             capture.stop();
-            //play.setImage(pImg);
             play.setText("play");
             stop.setDisable(true);
             this.stop();

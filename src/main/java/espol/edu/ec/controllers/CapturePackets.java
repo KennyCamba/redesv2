@@ -5,11 +5,13 @@
  */
 package espol.edu.ec.controllers;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import espol.edu.ec.models.PacketTime;
 import org.pcap4j.core.*;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.packet.Packet;
@@ -25,7 +27,7 @@ public class CapturePackets {
     private Runnable run;
     private boolean isRun;
     private boolean pause;
-    private List<Packet> capturePackets;
+    private List<PacketTime> capturePackets;
     private int bytes;
     private long init;
     private long timePause;
@@ -92,9 +94,9 @@ public class CapturePackets {
     
     private void capture(){
         PacketListener listener = (Packet packet) -> {
-            capturePackets.add(packet);
+            capturePackets.add(new PacketTime(new Timestamp(System.currentTimeMillis()),  packet));
             bytes += packet.length();
-            System.out.println(packet);
+            //System.out.println(packet);
         };
         try {
             int maxPackets = 1;
@@ -108,9 +110,9 @@ public class CapturePackets {
         }
     }
     
-    public List<Packet> getCapturePackets(){
-        Object obj = ((ArrayList<Packet>)this.capturePackets).clone();
-        return obj instanceof ArrayList ? (ArrayList<Packet>)obj: null;
+    public List<PacketTime> getCapturePackets(){
+        Object obj = ((ArrayList<PacketTime>)this.capturePackets).clone();
+        return obj instanceof ArrayList ? (ArrayList<PacketTime>)obj: null;
     }
 
     public PcapStat getStats(){
@@ -127,5 +129,32 @@ public class CapturePackets {
 
     public long getCurrentTime(){
         return device != null && isRun ? System.currentTimeMillis() - init - timePause: 0;
+    }
+
+    public void savePackets(String path){
+        try {
+            PcapDumper dumper = handle.dumpOpen(path);
+            List<PacketTime> packets = getCapturePackets();
+            for(PacketTime packet: packets){
+                dumper.dump(packet.getPacket(), packet.getTimestamp());
+            }
+            dumper.close();
+        } catch (PcapNativeException | NotOpenException e) {
+            Logger.getLogger(e.getMessage());
+        }
+    }
+
+    public void openOffline(String pcapfile){
+        this.stop();
+        try {
+            handle = Pcaps.openOffline(pcapfile);
+            Packet packet;
+            while ((packet = handle.getNextPacket()) != null){
+                capturePackets.add(new PacketTime(handle.getTimestamp(), packet));
+                bytes += packet.length();
+            }
+        } catch (PcapNativeException | NotOpenException e) {
+            Logger.getLogger(e.getMessage());
+        }
     }
 }

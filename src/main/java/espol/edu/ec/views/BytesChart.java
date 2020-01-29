@@ -1,6 +1,7 @@
 package espol.edu.ec.views;
 
 import espol.edu.ec.controllers.CapturePackets;
+import espol.edu.ec.models.PacketTime;
 import espol.edu.ec.models.Panel;
 import javafx.application.Platform;
 import javafx.scene.chart.CategoryAxis;
@@ -38,6 +39,8 @@ public class BytesChart extends Panel {
         xAxis.setAnimated(false);
         yAxis.setLabel("Bytes");
         yAxis.setAnimated(false);
+        yAxis.setAutoRanging(false);
+        yAxis.setUpperBound(600);
         bytes.setTitle("Bytes transmitidos");
         bytes.setAnimated(false);
         bytes.getData().add(series);
@@ -49,20 +52,32 @@ public class BytesChart extends Panel {
         super.run();
         scheduledExecutorService.scheduleAtFixedRate(()->{
             if(!pause){
-                List<Packet> packets = CapturePackets.getInstance().getCapturePackets();
+                List<PacketTime> packets = CapturePackets.getInstance().getCapturePackets();
                 for(int i=init; i<packets.size(); i++){
-                    LocalTime now = LocalTime.now();
-                    Packet p = packets.get(i);
-                    Platform.runLater(()->{
-                        if(series.getData().size() > 40)
-                            series.getData().remove(0);
-                        series.getData().add(new XYChart.Data<>(now.format(DateTimeFormatter.ISO_TIME), p.length()));
-                    });
+                    PacketTime p = packets.get(i);
+                    update(p);
                 }
                 init = packets.size();
             }
         }, 0, 100, TimeUnit.MILLISECONDS);
 
+    }
+
+    private void update(PacketTime p){
+        String time = p.getTimestamp().toLocalDateTime().toLocalTime().format(DateTimeFormatter.ISO_TIME);
+        Platform.runLater(()->{
+            if(series.getData().size() > 40)
+                series.getData().remove(0);
+            series.getData().add(new XYChart.Data<>(time, p.getPacket().length()));
+        });
+    }
+
+    @Override
+    public void runOffline() {
+        List<PacketTime> packetTimes = CapturePackets.getInstance().getCapturePackets();
+        for(PacketTime packet: packetTimes){
+            update(packet);
+        }
     }
 
     @Override

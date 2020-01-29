@@ -49,5 +49,9 @@ public class Panel extends StackPane{
     public void setPause(boolean pause){
         this.pause = pause;
     }
-    
+
+    public void runOffline(){
+
+    }
+
 }

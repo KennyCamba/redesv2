@@ -1,1 +1,7 @@
 *.class
+.idea/artifacts/*
+META-INF/*
+manifest/*
+out/*
+src/main/java/manifest/*
+src/main/java/META-INF/*

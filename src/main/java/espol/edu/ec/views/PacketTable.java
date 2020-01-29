@@ -2,6 +2,7 @@ package espol.edu.ec.views;
 
 import espol.edu.ec.controllers.CapturePackets;
 import espol.edu.ec.models.PacketRaw;
+import espol.edu.ec.models.PacketTime;
 import espol.edu.ec.models.Panel;
 import espol.edu.ec.packetsniffer.Const;
 import javafx.application.Platform;
@@ -31,7 +32,7 @@ public class PacketTable extends Panel {
         super("Tabla de Paquetes");
         table = new TableView<>();
         number = new TableColumn<>(new String("N°".getBytes(), StandardCharsets.UTF_8));
-        capturedAt = new TableColumn<>("Tiempo");
+        capturedAt = new TableColumn<>("Tiemestamp");
         protocol = new TableColumn<>("Protocolo");
         length = new TableColumn<>("Bytes");
         description = new TableColumn<>(new String("Información".getBytes(), StandardCharsets.UTF_8));
@@ -43,13 +44,13 @@ public class PacketTable extends Panel {
         number.setCellValueFactory(new PropertyValueFactory<>("number"));
         number.setMinWidth(Const.W50 * 0.1);
         capturedAt.setCellValueFactory(new PropertyValueFactory<>("captureAt"));
-        capturedAt.setMinWidth(Const.W50 * 0.1);
+        capturedAt.setMinWidth(Const.W50 * 0.25);
         protocol.setCellValueFactory(new PropertyValueFactory<>("protocol"));
         protocol.setMinWidth(Const.W50 * 0.1);
         length.setCellValueFactory(new PropertyValueFactory<>("length"));
         length.setMinWidth(Const.W50 * 0.1);
         description.setCellValueFactory(new PropertyValueFactory<>("description"));
-        description.setMinWidth(Const.W50 * 0.5);
+        description.setMinWidth(Const.W50 * 0.37);
         table.getColumns().addAll(number, capturedAt, protocol, length, description);
         this.getChildren().add(table);
         events();
@@ -69,9 +70,9 @@ public class PacketTable extends Panel {
         super.run();
         scheduledExecutorService.scheduleAtFixedRate(()->{
             if(!pause){
-                List<Packet> packets = CapturePackets.getInstance().getCapturePackets();
+                List<PacketTime> packets = CapturePackets.getInstance().getCapturePackets();
                 for(int i=init; i<packets.size(); i++){
-                    Packet packet = packets.get(i);
+                    PacketTime packet = packets.get(i);
                     update(i+1, packet);
                     if(table.getItems().size() > 700)
                         Platform.runLater(() -> table.getItems().remove(0));
@@ -82,56 +83,61 @@ public class PacketTable extends Panel {
         }, 0, 100, TimeUnit.MILLISECONDS);
     }
 
-    private void update(int i, Packet packet) {
+    @Override
+    public void runOffline() {
+        List<PacketTime> packets = CapturePackets.getInstance().getCapturePackets();
+        for(int i=0; i<packets.size(); i++){
+            update(i, packets.get(i));
+        }
+    }
+
+    private void update(int i, PacketTime packetTime) {
+        Packet packet = packetTime.getPacket();
+        String time = packetTime.getTimestamp().toLocalDateTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
         if(packet.contains(IpV4Packet.class)){
            IpV4Packet ipv4 = packet.get(IpV4Packet.class);
-           LocalTime now = LocalTime.now();
            String dst = ipv4.getHeader().getDstAddr().toString();
            String src = ipv4.getHeader().getSrcAddr().toString();
             int length = ipv4.getHeader().length();
             String description = "Src: " + src + "\t" + "Dst: " + dst;
-            PacketRaw packetRaw = new PacketRaw(i, now.format(DateTimeFormatter.ISO_TIME), "IPv4", length, description);
+            PacketRaw packetRaw = new PacketRaw(i, time, "IPv4", length, description);
             Platform.runLater(()-> table.getItems().add(packetRaw));
         }
         if(packet.contains(EthernetPacket.class)){
             EthernetPacket ethernet = packet.get(EthernetPacket.class);
-            LocalTime now = LocalTime.now();
             String dst = ethernet.getHeader().getDstAddr().toString();
             String src = ethernet.getHeader().getSrcAddr().toString();
             int length = ethernet.getHeader().length();
             String description = "Src: " + src + "\t" + "Dst: " + dst;
-            PacketRaw packetRaw = new PacketRaw(i, now.format(DateTimeFormatter.ISO_TIME), "Ethernet", length, description);
+            PacketRaw packetRaw = new PacketRaw(i, time, "Ethernet", length, description);
             Platform.runLater(()-> table.getItems().add(packetRaw));
         }
         if(packet.contains(TcpPacket.class)){
             TcpPacket tcp = packet.get(TcpPacket.class);
-            LocalTime now = LocalTime.now();
             String dst = tcp.getHeader().getDstPort().toString();
             String src = tcp.getHeader().getSrcPort().toString();
             int length = tcp.getHeader().length();
             String description = "Src: " + src + "\t" + "Dst: " + dst;
-            PacketRaw packetRaw = new PacketRaw(i, now.format(DateTimeFormatter.ISO_TIME), "TCP", length, description);
+            PacketRaw packetRaw = new PacketRaw(i, time, "TCP", length, description);
             Platform.runLater(()-> table.getItems().add(packetRaw));
         }
         if(packet.contains(UdpPacket.class)){
             UdpPacket udp = packet.get(UdpPacket.class);
-            LocalTime now = LocalTime.now();
             String dst = udp.getHeader().getDstPort().toString();
             String src = udp.getHeader().getSrcPort().toString();
             int length = udp.getHeader().length();
             String description = "Src: " + src + "\t" + "Dst: " + dst;
-            PacketRaw packetRaw = new PacketRaw(i, now.format(DateTimeFormatter.ISO_TIME), "UDP", length, description);
+            PacketRaw packetRaw = new PacketRaw(i, time, "UDP", length, description);
             Platform.runLater(()-> table.getItems().add(packetRaw));
         }
         if(packet.contains(DnsPacket.class)){
             DnsPacket dns = packet.get(DnsPacket.class);
-            LocalTime now = LocalTime.now();
             String info = dns.getHeader().getAdditionalInfo().toString();
             String ques = dns.getHeader().getQuestions().toString();
             String ans = dns.getHeader().getAnswers().toString();
             int length = dns.getHeader().length();
             String description = "Info: " + info + "\n" + "Questions: " + ques + "\nAnswers: " + ans;
-            PacketRaw packetRaw = new PacketRaw(i, now.format(DateTimeFormatter.ISO_TIME), "DNS", length, description);
+            PacketRaw packetRaw = new PacketRaw(i, time, "DNS", length, description);
             Platform.runLater(()-> table.getItems().add(packetRaw));
         }
     }
