@@ -22,12 +22,14 @@ public class ApplicationsTraffic extends Panel {
     private ScrollPane scrollPane;
     private GridPane grid;
     private List<ApplicationView> applications;
+    private List<String> ips;
     private int init;
 
     public ApplicationsTraffic() {
         super("Trafico de aplicaciones");
         scrollPane = new ScrollPane();
         applications = new ArrayList<>();
+        ips = new ArrayList<>();
         grid = new GridPane();
         init = 0;
         initCtrl();
@@ -58,35 +60,34 @@ public class ApplicationsTraffic extends Panel {
     }
 
     private void update(Packet packet, int size) {
-        //if(!packet.contains(DnsPacket.class)){
+        if(!packet.contains(DnsPacket.class)){
             if(packet.contains(TcpPacket.class) || packet.contains(UdpPacket.class)){
                 IpV4Packet ipv4 = packet.get(IpV4Packet.class);
                 try {
-                    InetAddress src = InetAddress.getByName(ipv4.getHeader().getSrcAddr().getHostAddress());
-                    //InetAddress dst = InetAddress.getByName(ipv4.getHeader().getDstAddr().getHostAddress());
-                    WebApplication web = new WebApplication(src);
-                    /*if(src.isSiteLocalAddress())
-                        web = new WebApplication(dst);*/
-                    ApplicationView view = new ApplicationView(web);
-                    int index;
-                    if((index = applications.indexOf(view)) != -1){
+                    int ind;
+                    if((ind = ips.indexOf(ipv4.getHeader().getSrcAddr().getHostAddress())) != -1){
                         Platform.runLater(()->{
-                            ApplicationView av = applications.get(index);
+                            ApplicationView av = applications.get(ind);
                             av.setPercentage(av.getCount()+1, size);
                             order();
                         });
                     }else{
+                        InetAddress src = InetAddress.getByName(ipv4.getHeader().getSrcAddr().getHostAddress());
+                        WebApplication web = new WebApplication(src);
+                        ApplicationView view = new ApplicationView(web);
+                        ips.add(ipv4.getHeader().getSrcAddr().getHostAddress());
                         Platform.runLater(()->{
                             applications.add(view);
                             view.setPercentage(1, size);
                             order();
                         });
                     }
+
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 }
             }
-        //}
+        }
     }
 
     private void order() {
@@ -102,13 +103,15 @@ public class ApplicationsTraffic extends Panel {
     public void stop() {
         super.stop();
         grid.getChildren().clear();
+        applications.clear();
+        ips.clear();
     }
 
-    @Override
+    /*@Override
     public void runOffline() {
         List<PacketTime> packetTimes = CapturePackets.getInstance().getCapturePackets();
         for(PacketTime packet: packetTimes){
             update(packet.getPacket(), packetTimes.size());
         }
-    }
+    }*/
 }

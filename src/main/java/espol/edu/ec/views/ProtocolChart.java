@@ -10,8 +10,6 @@ import espol.edu.ec.models.PacketTime;
 import espol.edu.ec.models.Panel;
 
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -26,7 +24,7 @@ import org.pcap4j.packet.UdpPacket;
 
 /**
  *
- * @author kcamb
+ *
  */
 public class ProtocolChart extends Panel {
     private PieChart chart;

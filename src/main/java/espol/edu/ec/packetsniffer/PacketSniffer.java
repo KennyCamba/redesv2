@@ -33,15 +33,15 @@ public class PacketSniffer extends Application{
     private MainPane mainPane;
 
     public static void main(String[] args) {
-        InetAddress addr1 = null;
+        /*InetAddress addr1 = null;
         InetAddress addr2 = null;
         InetAddress addr3 = null;
         InetAddress addr4 = null;
         String ip1 = "191.99.255.205";
         String ip2 = "192.168.0.4";
         String ip3 = "200.124.235.194";
-        String ip4 = "140.82.113.4";
-        try {
+        String ip4 = "140.82.113.4";*/
+        /*try {
             addr1 = InetAddress.getByName(ip1);
             System.out.println(addr1.isSiteLocalAddress());
             System.out.println(addr1.getHostName());
@@ -62,7 +62,7 @@ public class PacketSniffer extends Application{
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
         launch(args);
     }
     
