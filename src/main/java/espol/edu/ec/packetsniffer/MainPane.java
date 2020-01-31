@@ -168,6 +168,7 @@ public class MainPane extends BorderPane{
                 alert.initOwner(stage);
                 Optional<ButtonType> result = alert.showAndWait();
                 if(result.isPresent() && result.get() == ButtonType.OK){
+                    this.stop();
                     open();
                 }
             }else{
@@ -177,6 +178,7 @@ public class MainPane extends BorderPane{
     }
 
     private void open(){
+        devices.setValue(null);
         chooser.setTitle("Importar");
         File file = chooser.showOpenDialog(stage);
         if(file != null){
@@ -203,6 +205,7 @@ public class MainPane extends BorderPane{
         charts.add(new ProtocolChart());
         charts.add(new PortsChart());
         charts.add(new Stats());
+        charts.add(new ApplicationsTraffic());
         loadComboBox(); 
         topPanel();
         right.setMinHeight(Const.HEIGHT - top);
@@ -212,7 +215,6 @@ public class MainPane extends BorderPane{
     }
 
     private void play(){
-        //this.stop();
         if(!isStatic){
             timer = new Timer(60);
             Thread t = new Thread(timer);
@@ -246,6 +248,7 @@ public class MainPane extends BorderPane{
     }
 
     public void stop(){
+        stop.setDisable(true);
         timer.stop();
         CapturePackets.getInstance().stop();
         for(Panel panel: charts){
@@ -339,7 +342,6 @@ public class MainPane extends BorderPane{
         stop.setOnMouseClicked(e-> {
             capture.stop();
             play.setText("play");
-            stop.setDisable(true);
             this.stop();
         }); 
     }

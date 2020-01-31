@@ -7,24 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4515c0ab-0930-4649-a864-19c8114da9a3" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/executionHistory/executionHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.bin" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/classAnalysis.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.2.1/javaCompile/javaCompile.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/controllers/CapturePackets.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/controllers/CapturePackets.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/css/style.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/models/Panel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/models/Panel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/packetsniffer/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/packetsniffer/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/packetsniffer/MainPane.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/packetsniffer/MainPane.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/packetsniffer/PacketSniffer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/packetsniffer/PacketSniffer.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/views/BytesChart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/views/BytesChart.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/views/PacketTable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/views/PacketTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/views/PortsChart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/views/PortsChart.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/views/ProtocolChart.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/views/ProtocolChart.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/espol/edu/ec/views/Stats.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/espol/edu/ec/views/Stats.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -93,7 +87,20 @@
       <recent name="C:\Users\kcamb\IdeaProjects\PacketSniffer\src\main" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Application.PacketSniffer">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="espol.edu.ec.packetsniffer.Main" />
+      <module name="PacketSniffer.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="espol.edu.ec.packetsniffer.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="PacketSniffer" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="espol.edu.ec.packetsniffer.PacketSniffer" />
       <module name="PacketSniffer.main" />
@@ -109,6 +116,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Application.Main" />
         <item itemvalue="Application.PacketSniffer" />
       </list>
     </recent_temporary>
@@ -134,10 +142,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="225" y="69" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1536.824@0.0.1536.824" timestamp="1579847167595" />
-    <state x="511" y="98" key="#com.intellij.ide.util.MemberChooser" timestamp="1580281056302">
+    <state x="511" y="98" key="#com.intellij.ide.util.MemberChooser" timestamp="1580447697271">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="511" y="98" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1580281056302" />
+    <state x="511" y="98" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1580447697271" />
     <state x="575" y="124" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1579847306088" />
     <state x="413" y="149" key="#com.intellij.ide.util.TreeClassChooserDialog" timestamp="1580096070956">
       <screen x="0" y="0" width="1366" height="728" />
@@ -151,47 +159,48 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="463" y="120" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1580096583453" />
-    <state width="1323" height="191" key="GridCell.Tab.0.bottom" timestamp="1580282036203">
+    <state width="1323" height="81" key="GridCell.Tab.0.bottom" timestamp="1580453994919">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="191" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1580282036203" />
+    <state width="1323" height="81" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1580453994919" />
     <state width="1493" height="98" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1579937245359" />
-    <state width="1323" height="191" key="GridCell.Tab.0.center" timestamp="1580282036203">
+    <state width="1323" height="81" key="GridCell.Tab.0.center" timestamp="1580453994903">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="191" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1580282036203" />
+    <state width="1323" height="81" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1580453994903" />
     <state width="1493" height="98" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1579937245359" />
-    <state width="1323" height="191" key="GridCell.Tab.0.left" timestamp="1580282036203">
+    <state width="1323" height="81" key="GridCell.Tab.0.left" timestamp="1580453994903">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="191" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1580282036203" />
+    <state width="1323" height="81" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1580453994903" />
     <state width="1493" height="98" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1579937245358" />
-    <state width="1323" height="191" key="GridCell.Tab.0.right" timestamp="1580282036203">
+    <state width="1323" height="81" key="GridCell.Tab.0.right" timestamp="1580453994903">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="191" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1580282036203" />
+    <state width="1323" height="81" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1580453994903" />
     <state width="1493" height="98" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1579937245359" />
     <state x="163" y="0" key="SettingsEditor" timestamp="1580096614594">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="163" y="0" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1580096614594" />
-    <state x="419" y="210" key="com.intellij.ide.util.TipDialog" timestamp="1580254985686">
+    <state x="419" y="210" key="com.intellij.ide.util.TipDialog" timestamp="1580426278513">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="419" y="210" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1580254985686" />
+    <state x="419" y="210" key="com.intellij.ide.util.TipDialog/0.0.1366.728@0.0.1366.728" timestamp="1580426278513" />
     <state x="471" y="238" key="com.intellij.ide.util.TipDialog/0.0.1536.824@0.0.1536.824" timestamp="1579919712295" />
     <state x="492" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2" timestamp="1580274432744">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="492" y="282" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/0.0.1366.728@0.0.1366.728" timestamp="1580274432744" />
-    <state x="426" y="188" key="run.anything.popup" timestamp="1579927013676">
-      <screen x="0" y="0" width="1536" height="824" />
-    </state>
-    <state x="426" y="188" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1579927013676" />
-    <state x="383" y="128" width="672" height="600" key="search.everywhere.popup" timestamp="1579989402754">
+    <state x="379" y="166" key="run.anything.popup" timestamp="1580434595865">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="383" y="128" width="672" height="600" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1579989402754" />
+    <state x="379" y="166" key="run.anything.popup/0.0.1366.728@0.0.1366.728" timestamp="1580434595865" />
+    <state x="426" y="188" key="run.anything.popup/0.0.1536.824@0.0.1536.824" timestamp="1579927013676" />
+    <state x="383" y="128" width="672" height="600" key="search.everywhere.popup" timestamp="1580442536054">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="383" y="128" width="672" height="600" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1580442536054" />
     <state x="431" y="145" width="672" height="678" key="search.everywhere.popup/0.0.1536.824@0.0.1536.824" timestamp="1579926710483" />
   </component>
 </project>

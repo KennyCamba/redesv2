@@ -41,6 +41,7 @@ public class Panel extends StackPane{
     public void stop(){
         if(scheduledExecutorService != null){
             scheduledExecutorService.shutdownNow();
+            scheduledExecutorService = null;
             pause = false;
         }
 

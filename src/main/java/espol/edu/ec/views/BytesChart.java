@@ -58,8 +58,9 @@ public class BytesChart extends Panel {
                     update(p);
                 }
                 init = packets.size();
+                packets.clear();
             }
-        }, 0, 100, TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);
 
     }
 

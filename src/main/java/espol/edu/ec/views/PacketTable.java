@@ -78,16 +78,17 @@ public class PacketTable extends Panel {
                         Platform.runLater(() -> table.getItems().remove(0));
                 }
                 init = packets.size();
+                packets.clear();
             }
 
-        }, 0, 100, TimeUnit.MILLISECONDS);
+        }, 0, 1000, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void runOffline() {
         List<PacketTime> packets = CapturePackets.getInstance().getCapturePackets();
         for(int i=0; i<packets.size(); i++){
-            update(i, packets.get(i));
+            update(i+1, packets.get(i));
         }
     }
 

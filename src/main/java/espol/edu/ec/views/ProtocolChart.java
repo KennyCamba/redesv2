@@ -69,6 +69,7 @@ public class ProtocolChart extends Panel {
                     update(packet);
                 }
                 init = packets.size();
+                packets.clear();
             }
 
         }, 0, 1, TimeUnit.SECONDS);

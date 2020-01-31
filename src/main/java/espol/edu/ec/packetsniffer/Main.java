@@ -14,6 +14,7 @@ import org.pcap4j.core.PcapNativeException;
 import org.pcap4j.core.PcapNetworkInterface;
 import org.pcap4j.core.PcapNetworkInterface.PromiscuousMode;
 import org.pcap4j.core.PcapStat;
+import org.pcap4j.packet.DnsPacket;
 import org.pcap4j.packet.IpV4Packet;
 import org.pcap4j.packet.Packet;
 import org.pcap4j.util.NifSelector;
@@ -51,24 +52,20 @@ public class Main {
         PacketListener listener = new PacketListener() {
             @Override
             public void gotPacket(Packet packet) {
-                System.out.println(packet.get(IpV4Packet.class).getHeader());
+                /*if(packet.contains(DnsPacket.class)){
+                    System.out.println(packet);
+                }*/
+                System.out.println(packet);
             }
         };
         
         try {
-            int maxPackets = 50;
+            int maxPackets = 150;
             handle.loop(maxPackets, listener);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        PcapStat stats = handle.getStats();
-        System.out.println("Packets received: " + stats.getNumPacketsReceived());
-        System.out.println("Packets dropped: " + stats.getNumPacketsDropped());
-        System.out.println("Packets dropped by interface: " + stats.getNumPacketsDroppedByIf());
-        // Supported by WinPcap only
-        if (Platform.isWindows()) {
-            System.out.println("Packets captured: " +stats.getNumPacketsCaptured());
-        }
+
         // Cleanup when complete
         handle.close();
     }
